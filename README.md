@@ -26,6 +26,6 @@ createapp create-from-json foo.json
 
 ## TODO
 
- [ ] Error messages
- [ ] Better interface
- [ ] More configurability
+- [ ] Error messages
+- [ ] Better interface
+- [ ] More configurability
