@@ -16,13 +16,8 @@ struct AppJson: Codable {
     }
 }
 
-func createInfoPlist(app: AppJson) -> Data? {
-    let infoplist = InfoPlist(from: app)
-    do {
-        return try PropertyListEncoder().encode(infoplist)
-    } catch {
-    }
-    return nil
+func createInfoPlist(app: AppJson) throws -> Data {
+    return try PropertyListEncoder().encode(InfoPlist(from: app))
 }
 
 func createApp(app: AppJson) throws {
@@ -40,6 +35,6 @@ func createApp(app: AppJson) throws {
     }
 
     // create Info.plist
-    let data = createInfoPlist(app: app)
+    let data = try createInfoPlist(app: app)
     fman.createFile(atPath: "\(appContents)/Info.plist", contents: data)
 }

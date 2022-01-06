@@ -15,13 +15,13 @@ example `.createapp.json` file for reference.
 Passing an executable file as an argument:
 
 ```sh
-createapp create-from-executable foo
+createapp -m exec foo
 ```
 
 Passing a JSON file as an argument:
 
 ```sh
-createapp create-from-json foo.json
+createapp foo.json
 ```
 
 You can clone this repository and do `swift run` in order to produce an
@@ -30,6 +30,6 @@ because I compiled their "Basic Window" example as an example executable.
 
 ## TODO
 
+- [X] Better interface
 - [ ] Error messages
-- [ ] Better interface
 - [ ] More configurability
