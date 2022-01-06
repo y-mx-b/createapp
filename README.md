@@ -24,6 +24,10 @@ Passing a JSON file as an argument:
 createapp create-from-json foo.json
 ```
 
+You can clone this repository and do `swift run` in order to produce an
+example application! Credits to [raylib](https://www.raylib.com/examples.html)
+because I compiled their "Basic Window" example as an example executable.
+
 ## TODO
 
 - [ ] Error messages
