@@ -17,20 +17,25 @@ enum FileError: LocalizedError {
     }
 }
 
-struct CreateApp: ParsableCommand {
+struct Createapp: ParsableCommand {
     static var configuration = CommandConfiguration(
-        abstract: "A utility to automate creating apps.")
+        abstract: "Create apps easily from the terminal.",
+        discussion: """
+            Configure a JSON file to automate creating an app or quickly mock-up an app from an executable
+            """)
+
+    @Argument(help: "The file to use to create an app.",
+              completion: .file())
+    var file: String = ".createapp.json"
 
     @Flag(help: "Display extra information.")
     var verbose = false
 
-    @Option(name: [.short, .long],
-            help: "Define the method for generating the app.")
+    @Option(name: [.short, .long], completion: .list(["json", "exec"]), help: """
+            Define the method for generating the app.
+            Possible Values: [json, exec]
+            """)
     var method: Method = .json
-
-    @Argument(help: "The file to use to create an app.",
-              completion: CompletionKind.file())
-    var file: String = ".createapp.json"
 
     mutating func run() {
         let fman = FileManager.default
@@ -52,6 +57,7 @@ struct CreateApp: ParsableCommand {
             try createApp(app: app)
         } catch {
             print(error.localizedDescription)
+
         }
     }
 }
