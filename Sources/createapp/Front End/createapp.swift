@@ -6,6 +6,17 @@ enum Method: String, ExpressibleByArgument {
     case executable, exec
 }
 
+enum FileError: LocalizedError {
+    case nilContents(path: String)
+
+    public var errorDescription: String? {
+        switch self {
+        case .nilContents(let path):
+            return "Failed to read from file: \(path)"
+        }
+    }
+}
+
 struct CreateApp: ParsableCommand {
     static var configuration = CommandConfiguration(
         abstract: "A utility to automate creating apps.")
@@ -23,20 +34,22 @@ struct CreateApp: ParsableCommand {
 
     mutating func run() {
         let fman = FileManager.default
-        var app: AppJson?
+        var app: AppJson
         do {
             switch method {
             case .json:
-                verbosePrint(verbose, "Reading from JSON file.")
-                let appData = fman.contents(atPath: file)
-                verbosePrint(verbose, "Initializing app struct.")
-                app = try? JSONDecoder().decode(AppJson.self, from: appData!)
+                verbosePrint(verbose, "Reading from JSON file: \(file)")
+                guard let appData = fman.contents(atPath: file) else {
+                    throw FileError.nilContents(path: file)
+                }
+                verbosePrint(verbose, "Initializing app struct from JSON file: \(file)")
+                app = try JSONDecoder().decode(AppJson.self, from: appData)
             case .executable, .exec:
-                verbosePrint(verbose, "Initializing app struct from executable file.")
+                verbosePrint(verbose, "Initializing app struct from executable file: \(file)")
                 app = AppJson(from: file)
             }
             verbosePrint(verbose, "Creating app.")
-            try createApp(app: app!)
+            try createApp(app: app)
         } catch {
             print(error.localizedDescription)
         }
