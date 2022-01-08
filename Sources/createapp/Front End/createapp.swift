@@ -1,7 +1,7 @@
 import Foundation
 import ArgumentParser
 
-enum Method: String, ExpressibleByArgument {
+enum Method: String, CaseIterable, ExpressibleByArgument {
     case json
     case executable, exec
 }
@@ -31,7 +31,7 @@ struct Createapp: ParsableCommand {
     @Flag(help: "Display extra information.")
     var verbose = false
 
-    @Option(name: [.short, .long], completion: .list(["json", "exec"]), help: """
+    @Option(name: [.short, .long], help: """
             Define the method for generating the app.
             Possible Values: [json, exec]
             """)
