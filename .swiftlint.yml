@@ -1,0 +1,23 @@
+identifier_name:
+  min_length: 2
+  excluded:
+
+type_name:
+  min_length: 4
+  max_length:
+    warning: 20
+    error: 30
+  excluded: iPhone
+
+force_cast: warning
+force_try:
+  severity: warning
+
+disabled_rules:
+  - colon
+  - comma
+  - control_statement
+  - trailing_comma
+  - trailing_newline
+  - trailing_whitespace
+  - trailing_closure

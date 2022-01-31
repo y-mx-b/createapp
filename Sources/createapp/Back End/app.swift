@@ -8,11 +8,11 @@ struct AppJson: Codable {
     var version: String?
 
     init(from executable: String) {
-        self.bundleID = "com.example.www"
-        self.name = getName(file: executable)
+        bundleID = "com.example.www"
+        name = getName(file: executable)
         self.executable = executable
-        self.icon = nil
-        self.version = nil
+        icon = nil
+        version = nil
     }
 }
 

@@ -1,0 +1,24 @@
+# code formatting
+--indent 4
+--maxwidth 120
+--emptybraces linebreak
+--indentstrings true
+--enable acronyms
+
+# ACL
+--disable redundantFileprivate
+--enable blankLinesBetweenImports
+--importgrouping length
+
+# comments
+--lineaftermarks false
+--enable blockComments
+
+# function args/params
+--stripunusedargs unnamed-only
+
+# wrapping
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--disable wrapMultilineStatementBraces
