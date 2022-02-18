@@ -6,6 +6,7 @@ struct AppJson: Codable {
     var executable: String
     var icon: String?
     var version: String?
+    var assets: [String?]
 
     init(from executable: String) {
         bundleID = "com.example.www"
@@ -13,6 +14,7 @@ struct AppJson: Codable {
         self.executable = executable
         icon = nil
         version = nil
+        assets = [nil]
     }
 }
 
@@ -28,10 +30,16 @@ func createApp(app: AppJson) throws {
     try fman.createDirectory(atPath: "\(appContents)/MacOS", withIntermediateDirectories: false)
     try fman.createDirectory(atPath: "\(appContents)/Resources", withIntermediateDirectories: false)
 
-    // fill app (executable, icon)
+    // fill app (executable, icon, assets)
     try fman.copyItem(atPath: app.executable, toPath: "\(appContents)/MacOS/\(app.name)")
     if let icon = app.icon {
         try fman.copyItem(atPath: icon, toPath: "\(appContents)/Resources/\(app.name).icns")
+    }
+    for element in app.assets {
+        if let asset  = element {
+            print("adding asset")
+            try fman.copyItem(atPath: asset, toPath: "\(appContents)/Resources/\(asset.split(separator: "/").last!)")
+        }
     }
 
     // create Info.plist
