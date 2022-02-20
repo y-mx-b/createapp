@@ -43,6 +43,7 @@ because I compiled their "Basic Window" example as an example executable.
 - [X] Better interface
 - [X] Error messages (good enough)
 - [X] Include assets folders
+- [ ] Use URLs instead of strings
 - [ ] Recursively include assets
 - [ ] More configurability (config file)
 - [ ] Generate default `.createapp.json` (configurable)
