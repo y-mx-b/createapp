@@ -1,13 +1,13 @@
 import Foundation
 
-struct InfoPlist: Codable {
+struct InfoPlist: Encodable {
     var CFBundleIdentifier: String
     var CFBundleName: String
     var CFBundleExecutable: String
     var CFBundleIconFile: String?
     var CFBundleVersion: String?
 
-    init(from app: AppJson) {
+    init(from app: App) {
         CFBundleIdentifier = app.bundleID
         CFBundleName = app.name
         CFBundleExecutable = app.name
