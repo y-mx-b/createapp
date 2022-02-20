@@ -17,6 +17,5 @@ struct InfoPlist: Encodable {
 }
 
 func getName(file: String) -> String {
-    return file.components(separatedBy: "/").last?
-        .components(separatedBy: ".").first ?? ""
+    return (file as NSString).lastPathComponent as String
 }
