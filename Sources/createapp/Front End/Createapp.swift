@@ -46,26 +46,26 @@ struct Createapp: ParsableCommand {
         do {
             switch method {
             case .json:
-                verbosePrint(verbose, "Reading from JSON file: \(file)")
+                verbosePrint("Reading from JSON file: \(file)")
                 guard let appData = fman.contents(atPath: file) else {
                     throw FileError.nilContents(path: file)
                 }
-                verbosePrint(verbose, "Initializing app struct from JSON file: \(file)")
+                verbosePrint("Initializing app struct from JSON file: \(file)")
                 app = try JSONDecoder().decode(App.self, from: appData)
             case .executable, .exec:
-                verbosePrint(verbose, "Initializing app struct from executable file: \(file)")
+                verbosePrint("Initializing app struct from executable file: \(file)")
                 app = App(from: file)
             }
-            verbosePrint(verbose, "Creating app.")
+            verbosePrint("Creating app.")
             try app.createApp()
         } catch {
             print(error.localizedDescription)
         }
     }
-}
 
-func verbosePrint(_ verbose: Bool, _ text: String) {
-    if verbose {
-        print(text)
+    func verbosePrint(_ text: String) {
+        if self.verbose {
+            print(text)
+        }
     }
 }

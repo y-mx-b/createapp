@@ -1,21 +1,32 @@
 import Foundation
 
+extension String {
+    func toURL() -> URL {
+        return URL(fileURLWithPath: self)
+    }
+}
+
 struct App: Decodable {
+    var version: String?
     var bundleID: String
     var name: String
-    var executable: String
-    var icon: String?
-    var version: String?
-    var assets: [String]?
+    // URLs (internal)
+    var executable: URL { return URL(fileURLWithPath: executablePath) }
+    var icon: URL? { return URL(fileURLWithPath: iconPath ?? "") }
+    var assets: [URL]? { return assetPaths.map { $0.map { $0.toURL() } } }
+    // Path strings (external)
+    var executablePath: String
+    var iconPath: String?
+    var assetPaths: [String]?
 
     // -m exec
-    init(from executable: String) {
-        bundleID = "com.example.www"
-        name = getName(file: executable)
-        self.executable = executable
-        icon = nil
+    init(from executablePath: String) {
         version = nil
-        assets = nil
+        bundleID = "com.example.www"
+        name = getName(file: executablePath)
+        self.executablePath = executablePath
+        iconPath = nil
+        assetPaths = nil
     }
 }
 
@@ -28,20 +39,29 @@ extension App {
     func createApp() throws {
         let fman = FileManager.default
         // create app structure
-        let appContents = "\(self.name).app/Contents"
-        try fman.createDirectory(atPath: "\(appContents)", withIntermediateDirectories: true)
-        try fman.createDirectory(atPath: "\(appContents)/MacOS", withIntermediateDirectories: false)
-        try fman.createDirectory(atPath: "\(appContents)/Resources", withIntermediateDirectories: false)
+        let appContents = URL(fileURLWithPath: "\(self.name).app/Contents",
+                              relativeTo: URL(fileURLWithPath: fman.currentDirectoryPath))
+        let appResources = appContents.appendingPathComponent("Resources", isDirectory: true)
+        let appMacOS = appContents.appendingPathComponent("MacOS", isDirectory: true)
+
+        try fman.createDirectory(at: appContents, withIntermediateDirectories: true)
+        try fman.createDirectory(at: appMacOS, withIntermediateDirectories: false)
+        try fman.createDirectory(at: appResources, withIntermediateDirectories: false)
 
         // fill app (executable, icon, assets)
-        try fman.copyItem(atPath: self.executable, toPath: "\(appContents)/MacOS/\(self.name)")
+        try fman.copyItem(at: self.executable,
+                          to: appMacOS.appendingPathComponent(executable.lastPathComponent,
+                                                              isDirectory: false))
         if let icon = self.icon {
-            try fman.copyItem(atPath: icon, toPath: "\(appContents)/Resources/\(self.name).icns")
+            try fman.copyItem(at: icon,
+                              to: appResources.appendingPathComponent(icon.lastPathComponent,
+                                                                  isDirectory: false))
         }
         if let assets = self.assets {
             for asset in assets {
-                try fman.copyItem(atPath: asset,
-                                  toPath: "\(appContents)/Resources/\(asset.split(separator: "/").last!)")
+                try fman.copyItem(at: asset,
+                                  to: appResources.appendingPathComponent(asset.lastPathComponent,
+                                                                          isDirectory: false))
             }
         }
 
@@ -54,22 +74,22 @@ extension App {
 // boilerplate
 extension App {
     enum CodingKeys: String, CodingKey {
+        case version
         case bundleID
         case name
-        case executable
-        case icon
-        case version
-        case assets
+        case executablePath = "executable"
+        case iconPath = "icon"
+        case assetPaths = "assets"
     }
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
+        version = try values.decode(String.self, forKey: .version)
         bundleID = try values.decode(String.self, forKey: .bundleID)
         name = try values.decode(String.self, forKey: .name)
-        executable = try values.decode(String.self, forKey: .executable)
-        icon = try values.decode(String?.self, forKey: .icon)
-        version = try values.decode(String.self, forKey: .version)
-        assets = try values.decode([String]?.self, forKey: .assets)
+        executablePath = try values.decode(String.self, forKey: .executablePath)
+        iconPath = try values.decode(String?.self, forKey: .iconPath)
+        assetPaths = try values.decode([String]?.self, forKey: .assetPaths)
     }
 }
