@@ -1,18 +1,28 @@
 import Foundation
 
 struct InfoPlist: Encodable {
-    var CFBundleIdentifier: String
-    var CFBundleName: String
-    var CFBundleExecutable: String
-    var CFBundleIconFile: String?
-    var CFBundleVersion: String?
+    var bundleID: String
+    var name: String
+    var executable: String
+    var icon: String?
+    var version: String?
 
     init(from app: App) {
-        CFBundleIdentifier = app.bundleID
-        CFBundleName = app.name
-        CFBundleExecutable = app.name
-        CFBundleIconFile = app.name + ".icns"
-        CFBundleVersion = app.version
+        bundleID = app.bundleID
+        name = app.name
+        executable = app.name
+        icon = app.name + ".icns"
+        version = app.version
+    }
+}
+
+extension InfoPlist {
+    enum CodingKeys: String, CodingKey {
+        case bundleID = "CFBundleIdentifier"
+        case name = "CFBundleName"
+        case executable = "CFBundleExecutable"
+        case icon = "CFBundleIconFile"
+        case version = "CFBundleVersion"
     }
 }
 

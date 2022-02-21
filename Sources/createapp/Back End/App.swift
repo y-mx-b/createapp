@@ -17,7 +17,6 @@ struct App: Decodable {
         version = nil
         assets = nil
     }
-
 }
 
 // methods
