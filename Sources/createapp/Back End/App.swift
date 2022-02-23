@@ -1,4 +1,5 @@
 import Foundation
+import PathKit
 
 extension String {
     func toURL() -> URL {
@@ -11,13 +12,13 @@ struct App: Decodable {
     var bundleID: String
     var name: String
     // URLs (internal)
-    var executable: URL { return URL(fileURLWithPath: executablePath) }
-    var icon: URL? { return URL(fileURLWithPath: iconPath ?? "") }
-    var assets: [URL]? { return assetPaths.map { $0.map { $0.toURL() } } }
+    // var executable: URL { return URL(fileURLWithPath: executablePath) }
+    // var icon: URL? { return URL(fileURLWithPath: iconPath ?? "") }
+    // var assets: [URL]? { return assetPaths.map { $0.map { $0.toURL() } } }
     // Path strings (external)
-    var executablePath: String
-    var iconPath: String?
-    var assetPaths: [String]?
+    var executablePath: Path
+    var iconPath: Path?
+    var assetPaths: [Path]?
 
     // -m exec
     init(from executablePath: String) {
