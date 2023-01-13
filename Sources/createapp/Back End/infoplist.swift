@@ -18,5 +18,5 @@ struct InfoPlist: Codable {
 
 func getName(file: String) -> String {
     return file.components(separatedBy: "/").last?
-            .components(separatedBy: ".").first ?? ""
+        .components(separatedBy: ".").first ?? ""
 }
