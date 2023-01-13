@@ -31,5 +31,5 @@ because I compiled their "Basic Window" example as an example executable.
 ## TODO
 
 - [X] Better interface
-- [ ] Error messages
+- [X] Error messages (good enough)
 - [ ] More configurability
