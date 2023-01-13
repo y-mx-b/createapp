@@ -12,6 +12,7 @@ struct InfoPlist: Codable {
         CFBundleName = app.name
         CFBundleExecutable = app.name
         CFBundleIconFile = app.name + ".icns"
+        CFBundleVersion = app.version
     }
 }
 

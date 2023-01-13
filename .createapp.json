@@ -2,5 +2,6 @@
   "bundleID": "com.example.www",
   "name": "test",
   "executable": "./Resources/test",
-  "icon": "./Resources/icon.icns"
+  "icon": "./Resources/icon.icns",
+  "version": "0.0.1"
 }
