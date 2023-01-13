@@ -8,15 +8,7 @@ struct App: Decodable {
     var version: String?
     var assets: [String]?
 
-    enum CodingKeys: String, CodingKey {
-        case bundleID
-        case name
-        case executable
-        case icon
-        case version
-        case assets
-    }
-
+    // -m exec
     init(from executable: String) {
         bundleID = "com.example.www"
         name = getName(file: executable)
@@ -26,17 +18,10 @@ struct App: Decodable {
         assets = nil
     }
 
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
+}
 
-        bundleID = try values.decode(String.self, forKey: .bundleID)
-        name = try values.decode(String.self, forKey: .name)
-        executable = try values.decode(String.self, forKey: .executable)
-        icon = try values.decode(String?.self, forKey: .icon)
-        version = try values.decode(String.self, forKey: .version)
-        assets = try values.decode([String]?.self, forKey: .assets)
-    }
-
+// methods
+extension App {
     func createInfoPlist() throws -> Data {
         return try PropertyListEncoder().encode(InfoPlist(from: self))
     }
@@ -64,5 +49,28 @@ struct App: Decodable {
         // create Info.plist
         let data = try self.createInfoPlist()
         fman.createFile(atPath: "\(appContents)/Info.plist", contents: data)
+    }
+}
+
+// boilerplate
+extension App {
+    enum CodingKeys: String, CodingKey {
+        case bundleID
+        case name
+        case executable
+        case icon
+        case version
+        case assets
+    }
+
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+
+        bundleID = try values.decode(String.self, forKey: .bundleID)
+        name = try values.decode(String.self, forKey: .name)
+        executable = try values.decode(String.self, forKey: .executable)
+        icon = try values.decode(String?.self, forKey: .icon)
+        version = try values.decode(String.self, forKey: .version)
+        assets = try values.decode([String]?.self, forKey: .assets)
     }
 }
