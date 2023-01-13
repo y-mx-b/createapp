@@ -2,6 +2,16 @@
 
 A simple utility to create macOS app bundles automatically.
 
+## Install
+
+You can install this utility with [Mint](https://github.com/yonaskolb/Mint).
+
+```sh
+mint install y-mx-b/createapp
+```
+
+You can also build from source if you'd like.
+
 ## Usage
 
 There are two methods for creating an app: you can either create a JSON file,
