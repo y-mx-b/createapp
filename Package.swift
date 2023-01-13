@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "createapp",
+    platforms: [
+        .macOS(.v10_11)
+    ],
     products: [
         .executable(name: "createapp", targets: ["createapp"])
     ],
