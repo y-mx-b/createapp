@@ -6,7 +6,7 @@ struct AppJson: Codable {
     var executable: String
     var icon: String?
     var version: String?
-    var assets: [String?]
+    var assets: [String]?
 
     init(from executable: String) {
         bundleID = "com.example.www"
@@ -14,7 +14,7 @@ struct AppJson: Codable {
         self.executable = executable
         icon = nil
         version = nil
-        assets = [nil]
+        assets = nil
     }
 }
 
@@ -35,9 +35,8 @@ func createApp(app: AppJson) throws {
     if let icon = app.icon {
         try fman.copyItem(atPath: icon, toPath: "\(appContents)/Resources/\(app.name).icns")
     }
-    for element in app.assets {
-        if let asset  = element {
-            print("adding asset")
+    if let assets = app.assets {
+        for asset in assets {
             try fman.copyItem(atPath: asset, toPath: "\(appContents)/Resources/\(asset.split(separator: "/").last!)")
         }
     }
