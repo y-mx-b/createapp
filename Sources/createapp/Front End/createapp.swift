@@ -1,41 +1,50 @@
 import Foundation
 import ArgumentParser
 
+enum Method: String, ExpressibleByArgument {
+    case json
+    case executable, exec
+}
+
 struct CreateApp: ParsableCommand {
     static var configuration = CommandConfiguration(
-        abstract: "A utility to automate creating apps.",
-        subcommands: [CreateFromJson.self, CreateFromExecutable.self],
-        defaultSubcommand: CreateFromJson.self)
+        abstract: "A utility to automate creating apps.")
 
-    struct CreateFromJson: ParsableCommand {
-        static var configuration = CommandConfiguration(
-            abstract: "Create an app from a JSON file.")
+    @Flag(help: "Display extra information.")
+    var verbose = false
 
-        @Argument var file: String = ".createapp.json"
+    @Option(name: [.short, .long],
+            help: "Define the method for generating the app.")
+    var method: Method = .json
 
-        mutating func run() {
-            let fman = FileManager.default
-            let appData = fman.contents(atPath: file)
-            let app = try? JSONDecoder().decode(AppJson.self, from: appData!)
-            do {
-                try createApp(app: app!)
-            } catch {
+    @Argument(help: "The file to use to create an app.",
+              completion: CompletionKind.file())
+    var file: String = ".createapp.json"
+
+    mutating func run() {
+        let fman = FileManager.default
+        var app: AppJson?
+        do {
+            switch method {
+            case .json:
+                verbosePrint(verbose, "Reading from JSON file.")
+                let appData = fman.contents(atPath: file)
+                verbosePrint(verbose, "Initializing app struct.")
+                app = try? JSONDecoder().decode(AppJson.self, from: appData!)
+            case .executable, .exec:
+                verbosePrint(verbose, "Initializing app struct from executable file.")
+                app = AppJson(from: file)
             }
+            verbosePrint(verbose, "Creating app.")
+            try createApp(app: app!)
+        } catch {
+            print(error.localizedDescription)
         }
     }
+}
 
-    struct CreateFromExecutable: ParsableCommand {
-        static var configuration = CommandConfiguration(
-            abstract: "Create an app from an executable file.")
-
-        @Argument var executable: String
-
-        mutating func run() {
-            let app = AppJson(from: executable)
-            do {
-                try createApp(app: app)
-            } catch {
-            }
-        }
+func verbosePrint(_ verbose: Bool, _ text: String) {
+    if verbose {
+        print(text)
     }
 }
