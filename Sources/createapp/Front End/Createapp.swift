@@ -42,7 +42,7 @@ struct Createapp: ParsableCommand {
 
     mutating func run() {
         let fman = FileManager.default
-        var app: AppJson
+        var app: App
         do {
             switch method {
             case .json:
@@ -51,13 +51,13 @@ struct Createapp: ParsableCommand {
                     throw FileError.nilContents(path: file)
                 }
                 verbosePrint(verbose, "Initializing app struct from JSON file: \(file)")
-                app = try JSONDecoder().decode(AppJson.self, from: appData)
+                app = try JSONDecoder().decode(App.self, from: appData)
             case .executable, .exec:
                 verbosePrint(verbose, "Initializing app struct from executable file: \(file)")
-                app = AppJson(from: file)
+                app = App(from: file)
             }
             verbosePrint(verbose, "Creating app.")
-            try createApp(app: app)
+            try app.createApp()
         } catch {
             print(error.localizedDescription)
         }
