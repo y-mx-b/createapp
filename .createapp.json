@@ -3,5 +3,6 @@
   "name": "test",
   "executable": "./Resources/test",
   "icon": "./Resources/icon.icns",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "assets": [".createapp.json", ".swiftformat", "LICENSE"]
 }
